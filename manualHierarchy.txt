@@ -1,0 +1,2 @@
+boss: 34
+managers: 1 6 33 32
