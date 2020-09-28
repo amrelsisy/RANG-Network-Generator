@@ -85,9 +85,9 @@ elif manualAuto == 'manual':
 	nodeEdges = data_prep.manualEdgesBetweenGroups(hierarchicalCommunities, nodes, manualEdgesFile, manualPreferencesFile)
 #	print('manual nodeEdges:', nodeEdges)			
 
-#print()
+#print(networkGroups, len(networkGroups), len(hierarchicalCommunities))
 
-w, h = 0, 999999;
+w, h = 0, len(hierarchicalCommunities)*len(hierarchicalCommunities);
 allGroupsCombinations = [[0 for x in range(w)] for y in range(h)]
 combCnt = 0
 iterationCnt = len(networkGroups) + len(managementLevels)
