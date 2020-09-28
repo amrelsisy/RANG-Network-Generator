@@ -87,7 +87,7 @@ elif manualAuto == 'manual':
 
 #print()
 
-w, h = 0, 1000;
+w, h = 0, 999999;
 allGroupsCombinations = [[0 for x in range(w)] for y in range(h)]
 combCnt = 0
 iterationCnt = len(networkGroups) + len(managementLevels)
