@@ -160,6 +160,12 @@ def readGroundTruthCommunities(nodes, networkEdgesFile, networkGroups, manual_au
 	for managementLevel in managementLevels:
 		for community in groundTruthCommunities:
 			done = 0
+
+			#for the case of community with only one node
+			#it will have no low-level nodes
+			if managementLevel == managementLevels[2] and len(community) == 1:
+				cnt += 1
+				continue
 			for node in nodes:
 				if node in managementLevel and node in community:
 					hierarchicalCommunities[cnt].append(node)
