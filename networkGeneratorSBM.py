@@ -85,7 +85,8 @@ elif manualAuto == 'manual':
 	nodeEdges = data_prep.manualEdgesBetweenGroups(hierarchicalCommunities, nodes, manualEdgesFile, manualPreferencesFile)
 #	print('manual nodeEdges:', nodeEdges)			
 
-#print(networkGroups, len(networkGroups), len(hierarchicalCommunities))
+#print(networkGroups, len(networkGroups))
+#print(hierarchicalCommunities, len(hierarchicalCommunities))
 
 w, h = 0, len(hierarchicalCommunities)*len(hierarchicalCommunities);
 allGroupsCombinations = [[0 for x in range(w)] for y in range(h)]
@@ -179,70 +180,91 @@ for entry in allGroupsCombinations:
 		print(entry)
 '''
 
-#bernoulli Model
-totalGeneratedEdges = []
-if modelName == 'BWRN':
-	#print('bernoulli_WRG')
-	for i in range(combCnt):
-		#print(i, allGroupsCombinations[i])			
-		generatedEdges = data_prep.BWRN(nodeEdges, allGroupsCombinations[i], probOfSuccess)
+numberOfRuns = 0
+outputFile = ""
+if manualAuto == "auto":
+	if randomizeIDs == "noRandomize":
+		numberOfRuns = int(sys.argv[8]) 
+	elif randomizeIDs == "Randomize":
+		numberOfRuns = int(sys.argv[9])
+elif manualAuto == "manual":
+	if randomizeIDs == "noRandomize":
+		numberOfRuns = int(sys.argv[11])
+	elif randomizeIDs == "Randomize":
+		numberOfRuns = int(sys.argv[12])
+		
+for runs in range(numberOfRuns):
+	if manualAuto == "auto":
+		if randomizeIDs == "noRandomize":
+			outputFile = open(sys.argv[7] + str(runs+1) + ".txt", "w+")			
+		elif randomizeIDs == "Randomize":
+			outputFile = open(sys.argv[8] + str(runs+1) + ".txt", "w+")			
+	elif manualAuto == "manual":
+		if randomizeIDs == "noRandomize":
+			outputFile = open(sys.argv[10] + str(runs+1) + ".txt", "w+")			
+		elif randomizeIDs == "Randomize":
+			outputFile = open(sys.argv[11] + str(runs+1) + ".txt", "w+")			
 				
-		for edge in generatedEdges:
-			totalGeneratedEdges.append(edge)
+	#bernoulli Model
+	totalGeneratedEdges = []
+	if modelName == 'BWRN':
+		#print('bernoulli_WRG')
+		for i in range(combCnt):
+			#print(i, allGroupsCombinations[i])			
+			generatedEdges = data_prep.BWRN(nodeEdges, allGroupsCombinations[i], probOfSuccess)
+				
+			for edge in generatedEdges:
+				totalGeneratedEdges.append(edge)
 
 
-elif modelName == 'WRG':
-	#print('regular_WRG')
-	for i in range(combCnt):
-						
-		#print(i, allGroupsCombinations[i])				
-		generatedEdges = data_prep.WRG(nodeEdges, allGroupsCombinations[i])
+	elif modelName == 'WRG':
+		#print('regular_WRG')
+		for i in range(combCnt):
+							
+			#print(i, allGroupsCombinations[i])				
+			generatedEdges = data_prep.WRG(nodeEdges, allGroupsCombinations[i])
+	
+			for edge in generatedEdges:
+				totalGeneratedEdges.append(edge)
 
-		for edge in generatedEdges:
-			totalGeneratedEdges.append(edge)
+	if randomizeIDs == "Randomize":
+		randomNodeIds = data_prep.randomizeNodeIds(totalGeneratedEdges, randomNodeIdsFile, len(nodes))
+		#print(randomNodeIds)
 
-if randomizeIDs == "Randomize":
-	randomNodeIds = data_prep.randomizeNodeIds(totalGeneratedEdges, randomNodeIdsFile, len(nodes))
-	#print(randomNodeIds)
+	#print generated edges:
+	sourceTargetTuples = []
+	totalW = 0
+	finalGeneratedEdges = []
+	for edge in totalGeneratedEdges:
+		#to make sure to only print every directed unique edge only once
+		if (edge[0], edge[1]) not in sourceTargetTuples:
+			sourceTargetTuples.append((edge[0], edge[1]))
+			src = edge[0]
+			trgt = edge[1]
+			weight = edge[2]
+			totalW += int(weight)
+			#print(src, trgt, weight)
 
-#print generated edges:
-sourceTargetTuples = []
-totalW = 0
-finalGeneratedEdges = []
-for edge in totalGeneratedEdges:
-	#to make sure to only print every directed unique edge only once
-	if (edge[0], edge[1]) not in sourceTargetTuples:
-		sourceTargetTuples.append((edge[0], edge[1]))
-		src = edge[0]
-		trgt = edge[1]
-		weight = edge[2]
-		totalW += int(weight)
-		#print(src, trgt, weight)
+			#change node ids to the new random node ids
+			if randomizeIDs == "Randomize":		
+				newSourceId = ''
+				newTargetId = ''
+				for rnids in randomNodeIds:
+					if src == rnids[0]:
+						newSourceId = rnids[1]
+					if trgt == rnids[0]:
+						newTargetId = rnids[1]
+				finalGeneratedEdges.append((newSourceId, newTargetId, weight))
+			else:		
+				finalGeneratedEdges.append((src, trgt, weight))
 
-		#change node ids to the new random node ids
-		if randomizeIDs == "Randomize":		
-			newSourceId = ''
-			newTargetId = ''
-			for rnids in randomNodeIds:
-				if src == rnids[0]:
-					newSourceId = rnids[1]
-				if trgt == rnids[0]:
-					newTargetId = rnids[1]
-			finalGeneratedEdges.append((newSourceId, newTargetId, weight))
-		else:		
-			finalGeneratedEdges.append((src, trgt, weight))
-
-		'''		
-		for k in range(int(weight)):		
 			if randomizeIDs == "Randomize":
-				print(newSourceId, newTargetId)	
+				edgePair = newSourceId + ' ' + newTargetId + ' ' + str(weight) + '\n'
+				outputFile.write(edgePair)	
 			else:	
-				print(src, trgt)		
-		'''	
-		if randomizeIDs == "Randomize":				
-			print(newSourceId, newTargetId, weight)	
-		else:	
-			print(src, trgt, weight)
+				edgePair = src + ' ' + trgt + ' ' + str(weight) + '\n'
+				outputFile.write(edgePair)
 
+				
 #find breakdown of generated edges between hierarchical groups
 #data_prep.findBreakDownOfGeneratedEdgesBetweenGroups(hierarchicalCommunities, finalGeneratedEdges)				
