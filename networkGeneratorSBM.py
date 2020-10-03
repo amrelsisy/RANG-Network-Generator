@@ -5,9 +5,6 @@ import math
 import sys
 import dataPreparation as data_prep
 
-#command to run:
-#clear; python3 networkGeneratorSBM.py auto BWRN 0.875 noRandomize CAVIAR6edges_weighted.txt networkGroups.txt manualHierarchy.txt manualEdgesBetweenGroups.txt manualPreferences.txt randomNodeIds.txt
-
 manualAuto = sys.argv[1]
 modelName = sys.argv[2]
 probOfSuccess = sys.argv[3]
