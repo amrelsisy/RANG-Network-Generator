@@ -24,7 +24,7 @@ Available versions of the RANG generator
       - p: Probability of creating an edge using the specified model.
       - randomization: If a user wants to randomize node IDs for increased anonymity, the user must pass in “Randomize”, otherwise the user passes in “noRandomize”.
       - networkFile: Network file in the following format:
-        - Source node, target node, weight
+        - source_node target_node edge_weight
       - originalNetworkGroups: Original groups of the provided network. These groups can be found using either ground truth data, or a community detection method.
       - randomNodeIdsFile: File with a mapping of the original node IDs to the new randomized node IDs.
         - This file should not be provided if the user chooses “noRandomize” for the randomization command line argument.
