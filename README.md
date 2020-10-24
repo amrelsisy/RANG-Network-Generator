@@ -6,7 +6,7 @@ RANG generator background information
     - auto: Can be used when the user has a social network present that can be provided to our generator.
     - manual: Can be used when the user does NOT have access to a social network, and will instead manually provide statistical data about their social network to our RANG generator.
 - There are two different generation models available.
-    - BWRN model.
+    - BWRN model (produces the best results).
     - WRG model.
     - Both models are discussed in the following paper:
       - “A Synthetic Network Generator for Covert Network Analytics”
