@@ -89,7 +89,8 @@ Available versions of the RANG generator
 
 Louvain community detection:
 python3 louvaineCommunityDetection.py networkEdgesFile
- 
+- networkEdgesFile expected format: source_node target_node edge_weight
+- must be space separated
  
 Normalized Mutual Information with Randomization
 python3 -W ignore normalizedMutualInformation.py networkGroups.txt Randomize randomNodeIds.txt generatedLouvainGroups
